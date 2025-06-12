@@ -1,0 +1,149 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f0f0f0;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+header {
+    background-color: #dc0a2d; /* Rot, passend zu Pokémon */
+    color: white;
+    padding: 20px 0;
+    text-align: center;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+main {
+    flex-grow: 1;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px; /* Abstand zwischen den Sektionen */
+}
+
+.search-area {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+#pokemon-input {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+    width: 250px;
+}
+
+#search-button {
+    padding: 10px 15px;
+    background-color: #3b4cca; /* Blau, passend zu Pokémon */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
+
+#search-button:hover {
+    background-color: #2a3a9a;
+}
+
+.pokemon-display {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    padding: 30px;
+    text-align: center;
+    min-height: 200px; /* Mindesthöhe für den Anzeigebereich */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    max-width: 500px;
+}
+
+.pokemon-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+}
+
+.pokemon-card img {
+    width: 150px;
+    height: 150px;
+    object-fit: contain;
+    border: 2px solid #eee;
+    border-radius: 50%;
+    background-color: #f9f9f9;
+    padding: 5px;
+}
+
+.pokemon-card h2 {
+    margin: 0;
+    color: #333;
+    text-transform: capitalize; /* Erster Buchstabe gross */
+    font-size: 2em;
+}
+
+.pokemon-card p {
+    margin: 5px 0;
+    color: #555;
+    font-size: 1.1em;
+}
+
+.type-badges {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.type-badge {
+    padding: 5px 15px;
+    border-radius: 20px;
+    color: white;
+    font-weight: bold;
+    text-transform: capitalize;
+    font-size: 0.9em;
+}
+
+/* Beispiel-Typfarben (kannst du erweitern) */
+.type-badge.normal { background-color: #A8A77A; }
+.type-badge.fire { background-color: #EE812D; }
+.type-badge.water { background-color: #6390F0; }
+.type-badge.grass { background-color: #7AC74C; }
+.type-badge.electric { background-color: #F7D02C; }
+.type-badge.ice { background-color: #96D9D6; }
+.type-badge.fighting { background-color: #C22E28; }
+.type-badge.poison { background-color: #A33EA1; }
+.type-badge.ground { background-color: #E2BF65; }
+.type-badge.flying { background-color: #A98FF3; }
+.type-badge.psychic { background-color: #F95587; }
+.type-badge.bug { background-color: #A6B91A; }
+.type-badge.rock { background-color: #B6A136; }
+.type-badge.ghost { background-color: #735797; }
+.type-badge.dragon { background-color: #6F35FC; }
+.type-badge.steel { background-color: #B7B7CE; }
+.type-badge.dark { background-color: #705746; }
+.type-badge.fairy { background-color: #D685AD; }
+
+.placeholder-text {
+    font-style: italic;
+    color: #888;
+}
+
+footer {
+    margin-top: auto; /* Sorgt dafür, dass der Footer am unteren Rand klebt */
+    background-color: #333;
+    color: white;
+    text-align: center;
+    padding: 15px 0;
+    font-size: 0.9em;
+}
