@@ -9,8 +9,16 @@
 <body>
     <header>
         <h1>Pokémon Galerie</h1>
-  <div class="pokemon-container" id="pokemonContainer"></div>
+        <input type="text" id="searchInput" placeholder="Nach Pokémon suchen...">
+    </header>
+    <div class="pokemon-container" id="pokemonContainer"></div>
 
+    <div class="modal" id="pokemonModal">
+      <div class="modal-content" id="modalContent">
+        <span class="close-btn" id="closeModal">x</span>
+        <div id="modalDetails"></div>
+      </div>
+    </div>
     <script src="script.js"></script>
 </body>
 </html>
