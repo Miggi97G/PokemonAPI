@@ -1,124 +1,102 @@
-const container = document.getElementById("pokemonContainer");
-const searchInput = document.getElementById("searchInput");
-const modal = document.getElementById("pokemonModal");
-const modalContent = document.getElementById("modalContent");
-const modalDetails = document.getElementById("modalDetails");
-const closeModal = document.getElementById("closeModal");
-let allPokemon = [];
+const $ = id => document.getElementById(id);
+const container = $("pokemonContainer"),
+  searchInput = $("searchInput"),
+  modal = $("pokemonModal"),
+  modalContent = $("modalContent"),
+  modalDetails = $("modalDetails"),
+  closeModal = $("closeModal");
 
-      async function fetchPokemon(id) {
-        const res = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}`);
-        const data = await res.json();
-        return data;
-      }
+let allPokemon = [], currentPokemonIndex = -1;
+let currentOffset = 20;
 
-      function getTypeIcon(type) {
-        const icons = {
-          normal: "icons/normal.png",
-          fire: "icons/fire.png",
-          water: "icons/water.png",
-          electric: "icons/electric.png",
-          grass: "icons/grass.png",
-          ice: "icons/ice.png",
-          fighting: "icons/fighting.png",
-          poison: "icons/poison.png",
-          ground: "icons/ground.png",
-          flying: "icons/flying.png",
-          psychic: "icons/psychic.png",
-          bug: "icons/bug.png",
-          rock: "icons/rock.png",
-          ghost: "icons/ghost.png",
-          dragon: "icons/dragon.png",
-          dark: "icons/dark.png",
-          steel: "icons/steel.png",
-          fairy: "icons/fairy.png"
-        };
-        return icons[type];
-      }
+const typeIcons = {
+  normal: "icons/normal.png", fire: "icons/fire.png", water: "icons/water.png",
+  electric: "icons/electric.png", grass: "icons/grass.png", ice: "icons/ice.png",
+  fighting: "icons/fighting.png", poison: "icons/poison.png", ground: "icons/ground.png",
+  flying: "icons/flying.png", psychic: "icons/psychic.png", bug: "icons/bug.png",
+  rock: "icons/rock.png", ghost: "icons/ghost.png", dragon: "icons/dragon.png",
+  dark: "icons/dark.png", steel: "icons/steel.png", fairy: "icons/fairy.png"
+};
+const getTypeIcon = type => typeIcons[type];
 
-      function createPokemonCard(pokemon) {
-        const card = document.createElement("div");
-        card.classList.add("pokemon-card");
-        card.setAttribute("data-name", pokemon.name.toLowerCase());
+const fetchPokemon = async id =>
+  (await fetch(`https://pokeapi.co/api/v2/pokemon/${id}`)).json();
 
-        const img = document.createElement("img");
-        img.src = pokemon.sprites.front_default;
-        img.alt = pokemon.name;
-        img.classList.add("pokemon-img");
+const createPokemonCard = pokemon => {
+  const card = document.createElement("div");
+  card.className = "pokemon-card";
+  card.dataset.name = pokemon.name.toLowerCase();
+  card.innerHTML = `
+      <img src="${pokemon.sprites.front_default}" alt="${pokemon.name}" class="pokemon-img" />
+      <div class="pokemon-name">${pokemon.name}</div>
+      <div class="pokemon-type">
+        ${pokemon.types.map(t => {
+    const icon = getTypeIcon(t.type.name);
+    return icon ? `<img src="${icon}" alt="${t.type.name}" title="${t.type.name}" class="type-icon" />` : "";
+  }).join('')}
+      </div>`;
+  card.onclick = () => {
+    currentPokemonIndex = allPokemon.findIndex(p => p.id === pokemon.id);
+    showModal(pokemon);
+  };
+  container.appendChild(card);
+};
 
-        const name = document.createElement("div");
-        name.classList.add("pokemon-name");
-        name.textContent = pokemon.name;
+const prevBtn = Object.assign(document.createElement("button"), {
+  className: "prev-pokemon",
+  id: "prevPokemon",
+  textContent: "<",
+  onclick: () => showModal(allPokemon[--currentPokemonIndex])
+});
+const nextBtn = Object.assign(document.createElement("button"), {
+  id: "nextPokemon",
+  textContent: ">",
+  onclick: () => showModal(allPokemon[++currentPokemonIndex])
+});
+modalContent.append(prevBtn, nextBtn);
 
-        const typeContainer = document.createElement("div");
-        typeContainer.classList.add("pokemon-type");
+const showModal = pokemon => {
+  modalDetails.innerHTML = `
+      <h2>${pokemon.name.toUpperCase()}</h2>
+      <img src="${pokemon.sprites.front_default}" alt="${pokemon.name}" style="width: 120px; height: 120px;">
+      <p><strong>Gewicht:</strong> ${pokemon.weight / 10} kg</p>
+      <p><strong>Größe:</strong> ${pokemon.height / 10} m</p>
+      <p><strong>Typ:</strong> ${pokemon.types.map(t => t.type.name).join(', ')}</p>
+      <p><strong>Attacken:</strong> ${pokemon.moves.slice(0, 5).map(m => m.move.name).join(', ')}</p>`;
 
-        pokemon.types.forEach(t => {
-          const iconPath = getTypeIcon(t.type.name);
-          if (iconPath) {
-            const icon = document.createElement("img");
-            icon.src = iconPath;
-            icon.alt = t.type.name;
-            icon.classList.add("type-icon");
-            icon.title = t.type.name;
-            typeContainer.appendChild(icon);
-          }
-        });
+  prevBtn.style.display = currentPokemonIndex > 0 ? "block" : "none";
+  nextBtn.style.display = currentPokemonIndex < allPokemon.length - 1 ? "block" : "none";
+  modal.style.display = "flex";
+};
 
-        card.appendChild(img);
-        card.appendChild(name);
-        card.appendChild(typeContainer);
+closeModal.onclick = () => modal.style.display = "none";
+window.onclick = e => { if (e.target === modal) modal.style.display = "none"; };
 
-        card.addEventListener("click", () => {
-          showModal(pokemon);
-        });
-        container.appendChild(card);
-      }
+const loadPokemons = async (count = 20, offset = 0) => {
+  for (let i = offset + 1; i <= offset + count; i++) {
+    const pokemon = await fetchPokemon(i);
+    allPokemon.push(pokemon);
+    createPokemonCard(pokemon);
+  }
+};
 
-      function showModal(pokemon) {
-        modalDetails.innerHTML = `
-          <h2>${pokemon.name.toUpperCase()}</h2>
-          <img src="${pokemon.sprites.front_default}" alt="${pokemon.name}" style="width: 120px; height: 120px;">
-          <p><strong>Gewicht:</strong> ${pokemon.weight / 10} kg</p>
-          <p><strong>Größe:</strong> ${pokemon.height / 10} m</p>
-          <p><strong>Typ:</strong> ${pokemon.types.map(t => t.type.name).join(', ')}</p>
-          <p><strong>Attacken:</strong> ${pokemon.moves.slice(0, 5).map(m => m.move.name).join(', ')}</p>
-        `;
-        modal.style.display = "flex";
-      }
+const filterPokemons = query => {
+  document.querySelectorAll(".pokemon-card").forEach(card => {
+    card.style.display = card.dataset.name.includes(query.toLowerCase()) ? "block" : "none";
+  });
+};
 
-      closeModal.addEventListener("click", () => {
-        modal.style.display = "none";
-      });
+searchInput.addEventListener("input", e => {
+  const query = e.target.value.trim();
+  if (query.length >= 3 || query.length === 0) {
+    filterPokemons(query);
+  }
+});
 
-      window.addEventListener("click", e => {
-        if (e.target === modal) {
-          modal.style.display = "none";
-        }
-      });
+$("loadMoreBtn").addEventListener("click", () => {
+  loadPokemons(20, currentOffset);
+  currentOffset += 20;
+});
 
-      async function loadPokemons(count = 20) {
-        for (let i = 1; i <= count; i++) {
-          const pokemon = await fetchPokemon(i);
-          allPokemon.push(pokemon);
-          createPokemonCard(pokemon);
-        }
-      }
+loadPokemons();
 
-      function filterPokemons(query) {
-        const cards = document.querySelectorAll(".pokemon-card");
-        cards.forEach(card => {
-          const name = card.getAttribute("data-name");
-          if (name.includes(query.toLowerCase())) {
-            card.style.display = "block";
-          } else {
-            card.style.display = "none";
-          }
-        });
-      }
-
-      searchInput.addEventListener("input", e => {
-        filterPokemons(e.target.value);
-      });
-
-      loadPokemons();
