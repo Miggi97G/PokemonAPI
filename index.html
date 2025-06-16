@@ -6,28 +6,35 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Pokémon Explorer</title>
   <link rel="stylesheet" href="style.css">
+
+  <link rel="icon" href="./icons/favicon.png" type="image/x-icon">
 </head>
 
 <body>
   <header>
     <h1>Pokémon Galerie</h1>
-    <input type="text" id="searchInput" placeholder="Nach Pokémon suchen...">
+    <input type="text" id="searchInput" placeholder="Nach Pokémon suchen..." />
+    <div id="notFoundMessage" style="display: none;">Kein Pokémon gefunden.</div>
   </header>
+
   <div class="pokemon-container" id="pokemonContainer"></div>
 
   <div class="modal" id="pokemonModal">
     <div class="modal-content" id="modalContent">
-      <span class="close-btn" id="closeModal">x</span>
+      <span class="close-btn" id="closeModal">×</span>
       <div id="modalDetails"></div>
     </div>
   </div>
-  <div style="text-align: center; margin: 2rem 0;">
-    <button id="loadMoreBtn"
-      style="padding: 0.7rem 1.5rem; font-size: 1rem; border-radius: 8px; background: #007bff; color: white; border: none; cursor: pointer;">
-      Mehr Pokémon laden
-    </button>
+
+  <div id="loadingBar" style="display: none;">Lade Pokémon...</div>
+  <button id="loadMoreButton">Weitere Pokémon laden</button>
+
+  <div id="fullscreenSpinner" class="fullscreen-spinner" style="display: none;">
+    <div class="spinner"></div>
   </div>
+
   <script src="script.js"></script>
+  <script src="template.js"></script>
 </body>
 
 </html>
